@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset=utf-8>
+	<title>My first three.js app</title>
+	<style>
+		body { margin: 0; }
+		canvas { width: 100%; height: 100% }
+	</style>
+</head>
+
+<body>
+
+	<script src="js/three.js"></script>
+	<script src="js/detector.js"></script>
+
+	<script> 
+	// [1] scene
+	var scene = new THREE.Scene();
+	// [2] camera
+	var camera = new THREE.PerspectiveCamera(
+		75, // field of view
+		window.innerWidth / window.innerHeight, // aspect ratio (element width / height)
+		0.1, // near clipping pane -> closer than this won't be rendered
+		1000 // far clipping pane -> farther than this won't be rendered, adjust for preformance
+	);
+	// [3] renderer
+	var renderer = new THREE.WebGLRenderer(); // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
+
+	renderer.setSize( // the area we're filling, adjust for preformance or as needed
+		window.innerWidth,
+		window.innerHeight
+		// false // to render at lower resolution (but full size)
+	);
+
+	document.body.appendChild( renderer.domElement );
+
+	// making the cube
+	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+	var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); // that's a hex value
+
+	var cube = new THREE.Mesh( geometry, material );
+
+	scene.add( cube );
+
+	camera.position.z = 5; // this moves the camera outside of the cube
+
+	// render loop
+	function render() {
+		requestAnimationFrame( render );
+
+		cube.rotation.x += 0.01;
+		cube.rotation.y += 0.01;
+
+		renderer.render( scene, camera );
+	}
+
+	// check if webGL is supported
+	if (Detector.webgl) {
+
+		render(); // if yes, render it
+
+	} else {
+		var warning = Detector.getWebGLErrorMessage();
+		document.getElementById('container').appendChild(warning);
+	}
+
+	// render();
+	</script>
+
+</body>
+</html>
